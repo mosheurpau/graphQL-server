@@ -1,67 +1,27 @@
-let games = [
-  { id: "1", title: "Zelda, Tears of the Kingdom", platform: ["Switch"] },
-  { id: "2", title: "Final Fantasy 7 Remake", platform: ["PS5", "Xbox"] },
-  { id: "3", title: "Elden Ring", platform: ["PS5", "Xbox", "PC"] },
-  { id: "4", title: "Mario Kart", platform: ["Switch"] },
-  { id: "5", title: "Pokemon Scarlet", platform: ["PS5", "Xbox", "PC"] },
-];
+import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
 
-let authors = [
-  { id: "1", name: "mario", verified: true },
-  { id: "2", name: "yoshi", verified: false },
-  { id: "3", name: "peach", verified: true },
-];
+// Load environment variables from .env file
+dotenv.config();
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.rawa6uw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
+const client = new MongoClient(uri, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 
-let reviews = [
-  {
-    id: "1",
-    rating: 9,
-    content: "You can rate and review",
-    author_id: "1",
-    game_id: "2",
-  },
-  {
-    id: "2",
-    rating: 10,
-    content: "You can rate and review",
-    author_id: "2",
-    game_id: "1",
-  },
-  {
-    id: "3",
-    rating: 7,
-    content: "You can rate and review",
-    author_id: "3",
-    game_id: "3",
-  },
-  {
-    id: "4",
-    rating: 5,
-    content: "You can rate and review",
-    author_id: "2",
-    game_id: "4",
-  },
-  {
-    id: "5",
-    rating: 8,
-    content: "You can rate and review",
-    author_id: "2",
-    game_id: "5",
-  },
-  {
-    id: "6",
-    rating: 7,
-    content: "You can rate and review",
-    author_id: "1",
-    game_id: "2",
-  },
-  {
-    id: "7",
-    rating: 10,
-    content: "You can rate and review",
-    author_id: "3",
-    game_id: "1",
-  },
-];
+let db;
 
-export default { games, authors, reviews };
+async function connectDB() {
+  if (db) return db;
+  try {
+    await client.connect();
+    db = client.db("GraphQlDb");
+    console.log("Connected to MongoDB");
+    return db;
+  } catch (error) {
+    console.error("Failed to connect to MongoDB", error);
+    throw error;
+  }
+}
+
+export default connectDB;

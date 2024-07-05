@@ -1,73 +1,81 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-
-// db
-import db from "./_db.js";
-
-// types
+import connectDB from "./_db.js"; // Corrected the import statement
 import { typeDefs } from "./schema.js";
 
 const resolvers = {
   Query: {
-    games() {
-      return db.games;
+    async games() {
+      const db = await connectDB();
+      return db.collection("games").find().toArray();
     },
-    game(_, args) {
-      return db.games.find((game) => game.id === args.id);
+    async game(_, args) {
+      const db = await connectDB();
+      return db.collection("games").findOne({ id: args.id });
     },
-
-    authors() {
-      return db.authors;
+    async authors() {
+      const db = await connectDB();
+      return db.collection("authors").find().toArray();
     },
-    author(_, args) {
-      return db.authors.find((author) => author.id === args.id);
+    async author(_, args) {
+      const db = await connectDB();
+      return db.collection("authors").findOne({ id: args.id });
     },
-    reviews() {
-      return db.reviews;
+    async reviews() {
+      const db = await connectDB();
+      return db.collection("reviews").find().toArray();
     },
-    review(_, args) {
-      return db.reviews.find((review) => review.id === args.id);
+    async review(_, args) {
+      const db = await connectDB();
+      return db.collection("reviews").findOne({ id: args.id });
     },
   },
   Game: {
-    reviews(parent) {
-      return db.reviews.filter((r) => r.game_id === parent.id);
+    async reviews(parent) {
+      const db = await connectDB();
+      return db.collection("reviews").find({ game_id: parent.id }).toArray();
     },
   },
   Author: {
-    reviews(parent) {
-      return db.reviews.filter((r) => r.author_id === parent.id);
+    async reviews(parent) {
+      const db = await connectDB();
+      return db.collection("reviews").find({ author_id: parent.id }).toArray();
     },
   },
   Review: {
-    author(parent) {
-      return db.authors.find((a) => a.id === parent.author_id);
+    async author(parent) {
+      const db = await connectDB();
+      return db.collection("authors").findOne({ id: parent.author_id });
     },
-    game(parent) {
-      return db.games.find((g) => g.id === parent.game_id);
+    async game(parent) {
+      const db = await connectDB();
+      return db.collection("games").findOne({ id: parent.game_id });
     },
   },
   Mutation: {
-    deleteGame(_, args) {
-      db.games = db.games.filter((g) => g.id !== args.id);
-      return db.games;
+    async deleteGame(_, args) {
+      const db = await connectDB();
+      await db.collection("games").deleteOne({ id: args.id });
+      return db.collection("games").find().toArray();
     },
-    addGame(_, args) {
+    async addGame(_, args) {
+      const db = await connectDB();
       let game = {
         ...args.game,
         id: Math.floor(Math.random() * 10000).toString(),
       };
-      db.games.push(game);
+      await db.collection("games").insertOne(game);
       return game;
     },
-    updateGame(_, args) {
-      db.games = db.games.map((g) => {
-        if (g.id === args.id) {
-          return { ...g, ...args.edits };
-        }
-        return g;
-      });
-      return db.games.find((g) => g.id === args.id);
+    async updateGame(_, args) {
+      const db = await connectDB();
+      await db
+        .collection("games")
+        .updateOne({ id: args.id }, { $set: args.edits });
+      // update operation, $set operator to apply the edits provided in the args to the matching document.
+
+      return db.collection("games").findOne({ id: args.id });
+      // retrieves the updated document
     },
   },
 };
