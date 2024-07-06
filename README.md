@@ -1,10 +1,19 @@
 # GraphQL Server
 
-This is a GraphQL server built using Apollo Server. The server provides an API for managing games, reviews, and authors.
+This is a simple GraphQL server built with Node.js and Apollo Server, connected to a MongoDB database. The server provides an API for managing games, reviews, and authors.
 
 ## Live API
 
 You can access the live GraphQL API at: [https://graphql-server-dph9.onrender.com/](https://graphql-server-dph9.onrender.com/)
+
+## Technologies Used
+
+### Backend
+
+- **Node.js**: Runtime environment for executing JavaScript on the server side.
+- **Apollo Server**: GraphQL server that works with Node.js.
+- **GraphQL**: Query language for your API.
+- **MongoDB**: NoSQL database.
 
 ## Features
 
