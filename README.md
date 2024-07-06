@@ -46,6 +46,8 @@ You can access the live GraphQL API at: [https://graphql-server-dph9.onrender.co
 ## Example Queries and Mutations
 
 - Query: Fetch All Games
+
+  ```
   {
   games {
   id
@@ -53,8 +55,11 @@ You can access the live GraphQL API at: [https://graphql-server-dph9.onrender.co
   platform
   }
   }
+  ```
 
 - Query: Fetch a Single Game by ID
+
+  ```
   {
   game(id: "1") {
   id
@@ -67,8 +72,11 @@ You can access the live GraphQL API at: [https://graphql-server-dph9.onrender.co
   }
   }
   }
+  ```
 
 - Mutation: Add a New Game
+
+  ```
   mutation {
   addGame(game: { title: "New Game", platform: ["PC", "PS5"] }) {
   id
@@ -76,8 +84,11 @@ You can access the live GraphQL API at: [https://graphql-server-dph9.onrender.co
   platform
   }
   }
+  ```
 
 - Mutation: Update an Existing Game
+
+  ```
   mutation {
   updateGame(id: "1", edits: { title: "Updated Game Title" }) {
   id
@@ -85,8 +96,10 @@ You can access the live GraphQL API at: [https://graphql-server-dph9.onrender.co
   platform
   }
   }
+  ```
 
 - Mutation: Delete a Game
+  ```
   mutation {
   deleteGame(id: "1") {
   id
@@ -94,3 +107,4 @@ You can access the live GraphQL API at: [https://graphql-server-dph9.onrender.co
   platform
   }
   }
+  ```
